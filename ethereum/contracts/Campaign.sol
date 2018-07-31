@@ -1,4 +1,5 @@
-pragma solidity ^0.4.20;
+pragma solidity 0.4.20;
+
 
 // we first want to make a facotry to store and deploy campaigns
 contract CampaignFactory {
@@ -6,17 +7,18 @@ contract CampaignFactory {
     
     function createCampaign (uint minimum) public {
         //this creates a new contract instance which is deployed to the blockchain
-       address newCampaign = new Campaign(minimum, msg.sender);
-       deployedCampaigns.push(newCampaign);
+        address newCampaign = new Campaign(minimum, msg.sender);
+        deployedCampaigns.push(newCampaign);
         
     }
     // we want a function which returns entire array of deployed campaigns
+    
     function getDeployedCampaigns() public view returns (address[]) {
         return deployedCampaigns;
     }
     
-    
 }
+
 
 contract Campaign {
     //we define our struct does not create an instance it is a new type we use semicolen to seperate
@@ -31,13 +33,12 @@ contract Campaign {
     }
     
     // we make new array with type Request
-    Request [] public requests;
-    
+    Request[] public requests;
     address public manager;
     uint public minimumContribution;
     //we want to use mapping with key of address and return bool public called approvals
     mapping(address => bool) public approvers;
-     uint public approversCount;
+    uint public approversCount;
     
     // we want new modifier whic will only let manager call caertain functions
     // where we add restricted to a function there code will be applied where the _ lies
@@ -56,7 +57,7 @@ contract Campaign {
     
     // we want to be able to send money to the contract payable
     function contribute() public payable {
-        require (msg.value > minimumContribution);
+        require(msg.value > minimumContribution);
         
         // adds new key to approvers and gives a value of true
         // the address odes not get stored inside the mapping
@@ -81,7 +82,7 @@ contract Campaign {
             //we want to add the above request into our request array
             requests.push(newRequest);
         
-    }
+        }
     
     function approveRequest(uint index) public {
         
@@ -108,15 +109,15 @@ contract Campaign {
         require(request.approvalCount > (approversCount / 2));
         
          // they need to specify which index he wants to finalize
-        require(! request.complete);
+        require(!request.complete);
         
         //we now want to take requested funds and send to reciepient
         request.recipient.transfer(request.value);
         
         request.complete = true;
     }
-    
-     // we want  to return statistics about the campaign
+
+    // we want  to return statistics about the campaign
     function getSummary() public view returns (
         // the properties of the return values
         uint, uint, uint, uint, address

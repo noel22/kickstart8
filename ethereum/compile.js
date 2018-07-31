@@ -19,6 +19,8 @@ const output = solc.compile(source, 1).contracts;
 // we now need to recreate the build folder and check to see if it exists
 fs.ensureDirSync(buildPath);
 
+console.log(output)
+
 // we want to loop over output object take each contract inside 
 //and write to new file in build directory
 for (let contract in output) {
